@@ -12,8 +12,14 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  ? `https://${process.env.NEXT_PUBLIC_SITE_URL.replace(/^https?:\/\//, '')}`
+  : process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : 'https://calcishare.vercel.app'
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://YOUR_DOMAIN'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'CalciShare | VVCE Scientific Calculator Exchange',
     template: '%s | CalciShare',
@@ -36,7 +42,7 @@ export const metadata: Metadata = {
     title: 'CalciShare | VVCE Scientific Calculator Exchange',
     description:
       'Lend or sell scientific calculators between VVCE juniors and seniors. Instant login with your @vvce.ac.in college ID.',
-    url: 'https://YOUR_DOMAIN',
+    url: siteUrl,
     siteName: 'CalciShare',
     locale: 'en_IN',
     type: 'website',
