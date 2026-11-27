@@ -33,27 +33,27 @@ export function Header({ userEmail, showSignOut = true }: HeaderProps) {
   ]
 
   return (
-    <header className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur sticky top-0 z-40">
-      <div className="max-w-5xl mx-auto px-3 sm:px-6">
+    <header className="sticky top-4 sm:top-6 z-20 w-full max-w-5xl mx-auto px-3 sm:px-6">
+      <div className="rounded-3xl md:rounded-full backdrop-blur-md bg-white/5 border border-white/10 px-4 sm:px-6 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
         {/* Main top bar */}
-        <div className="h-14 sm:h-16 flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2">
           {/* Brand Logo */}
-          <Link href="/board" className="flex items-center gap-2 group flex-shrink-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              <Calculator className="w-4 h-4 sm:w-5 sm:h-5" />
+          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-brand-green/15 border border-brand-green/30 flex items-center justify-center text-brand-green group-hover:scale-105 transition-transform duration-300">
+              <Calculator className="w-4 h-4" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-base sm:text-lg leading-tight text-zinc-900 dark:text-zinc-50 tracking-tight">
+              <span className="font-medium text-sm sm:text-base leading-tight text-white tracking-tight">
                 CalciShare
               </span>
-              <span className="text-[9px] sm:text-[10px] font-semibold text-blue-600 dark:text-blue-400 tracking-wider uppercase">
+              <span className="text-[9px] sm:text-[10px] font-medium text-brand-green/80 tracking-wider uppercase">
                 VVCE Exchange
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 p-1 rounded-xl border border-zinc-200/80 dark:border-zinc-800">
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => {
               const isActive = pathname === link.href
               const Icon = link.icon
@@ -61,14 +61,17 @@ export function Header({ userEmail, showSignOut = true }: HeaderProps) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`relative flex items-center gap-1.5 text-xs font-medium transition-colors duration-300 ${
                     isActive
-                      ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 shadow-xs'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50'
+                      ? 'text-white'
+                      : 'text-white/60 hover:text-white'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-brand-green' : ''}`} />
                   <span>{link.name}</span>
+                  {isActive && (
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-brand-green shadow-[0_0_8px_#D6F866]" />
+                  )}
                 </Link>
               )
             })}
@@ -77,7 +80,7 @@ export function Header({ userEmail, showSignOut = true }: HeaderProps) {
           {/* User Email & Sign Out */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {userEmail && (
-              <span className="hidden lg:inline-block text-xs font-medium text-zinc-500 dark:text-zinc-400 max-w-[180px] truncate">
+              <span className="hidden lg:inline-block text-xs font-mono text-white/50 max-w-[180px] truncate">
                 {userEmail}
               </span>
             )}
@@ -86,8 +89,8 @@ export function Header({ userEmail, showSignOut = true }: HeaderProps) {
         </div>
 
         {/* Mobile Sub-Navigation Bar (visible on screens < md) */}
-        <div className="md:hidden pb-2.5 pt-0.5">
-          <nav className="grid grid-cols-3 gap-1 bg-zinc-100 dark:bg-zinc-900 p-1 rounded-xl border border-zinc-200/80 dark:border-zinc-800 text-center">
+        <div className="md:hidden mt-2.5 pt-2.5 border-t border-white/10">
+          <nav className="grid grid-cols-3 gap-1.5 text-center">
             {navLinks.map((link) => {
               const isActive = pathname === link.href
               const Icon = link.icon
@@ -95,10 +98,10 @@ export function Header({ userEmail, showSignOut = true }: HeaderProps) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all truncate ${
+                  className={`flex items-center justify-center gap-1 px-2 py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all duration-300 truncate ${
                     isActive
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+                      ? 'bg-brand-green text-black shadow-[0_0_15px_rgba(214,248,102,0.2)]'
+                      : 'text-white/60 hover:text-white bg-white/5'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5 flex-shrink-0" />

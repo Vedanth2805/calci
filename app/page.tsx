@@ -1,18 +1,17 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server'
+import { getVerifiedUser } from '@/utils/supabase/auth'
 import { GoogleSignInButton } from '@/components/GoogleSignInButton'
 import { Footer } from '@/components/Footer'
 import {
   Calculator,
-  ShieldCheck,
+  ArrowRight,
   ArrowRightLeft,
-  MessageCircle,
   AlertCircle,
   Lock,
-  Clock,
+  CheckCircle2,
   Shield,
+  MessageCircle,
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -26,14 +25,7 @@ interface PageProps {
 }
 
 export default async function HomePage({ searchParams }: PageProps) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (user) {
-    redirect('/board')
-  }
+  const user = await getVerifiedUser()
 
   const resolvedSearchParams = await searchParams
   const error = resolvedSearchParams?.error
@@ -45,186 +37,261 @@ export default async function HomePage({ searchParams }: PageProps) {
   )
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
-      {/* Top Banner / Nav */}
-      <header className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/25">
-              <Calculator className="w-5 h-5" />
+    <div className="min-h-screen flex flex-col items-center">
+      {/* SECTION 1 - NAVIGATION */}
+      <header className="sticky top-6 z-20 w-full max-w-4xl mx-auto px-4">
+        <nav className="rounded-full backdrop-blur-md bg-white/5 border border-white/10 px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+          {/* Logo left */}
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-full bg-brand-green/15 border border-brand-green/30 flex items-center justify-center text-brand-green transition-transform duration-300 group-hover:scale-105">
+              <Calculator className="w-4 h-4" />
             </div>
-            <div>
-              <span className="font-bold text-lg leading-tight tracking-tight block">
-                CalciShare
-              </span>
-              <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 tracking-wider uppercase block">
-                VVCE Student Network
-              </span>
-            </div>
-          </div>
+            <span className="font-medium text-sm sm:text-base tracking-tight text-white">
+              CalciShare
+            </span>
+          </Link>
 
-          <div className="flex items-center gap-3">
+          {/* Links center */}
+          <div className="hidden md:flex items-center gap-7 text-xs font-medium text-white/60">
+            <a
+              href="#how-it-works"
+              className="transition-colors duration-300 hover:text-white"
+            >
+              How it works
+            </a>
             <Link
               href="/privacy"
-              className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="transition-colors duration-300 hover:text-white"
             >
-              Privacy Policy
+              Privacy
             </Link>
-            <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-              VVCE Exclusive
-            </span>
           </div>
-        </div>
+
+          {/* Actions right */}
+          <div className="flex items-center gap-3">
+            {user ? (
+              <>
+                <Link
+                  href="/post"
+                  className="hidden sm:inline-block text-xs font-medium text-white/70 hover:text-white transition-colors duration-300"
+                >
+                  Post
+                </Link>
+                <Link
+                  href="/board"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-brand-green text-black text-xs font-medium shadow-[0_0_20px_rgba(214,248,102,0.2)] hover:shadow-[0_0_28px_rgba(214,248,102,0.4)] hover:brightness-105 transition-all duration-300"
+                >
+                  <span>Go to Board</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </>
+            ) : (
+              <>
+                <a
+                  href="#signin"
+                  className="hidden sm:inline-block text-xs font-medium text-white/70 hover:text-white transition-colors duration-300"
+                >
+                  Log in
+                </a>
+                <GoogleSignInButton compact label="Get Started" />
+              </>
+            )}
+          </div>
+        </nav>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 py-12 md:py-16">
-        <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center">
-          {!isConfigured && (
-            <div className="w-full mb-8 p-4 rounded-xl bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800/80 text-amber-900 dark:text-amber-200 text-left flex items-start gap-3 shadow-xs">
-              <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
-              <div>
-                <h2 className="font-semibold text-sm">Supabase Configuration Required</h2>
-                <p className="text-xs sm:text-sm mt-0.5 text-amber-800 dark:text-amber-300">
-                  Please copy <span className="font-mono">.env.example</span> to{' '}
-                  <span className="font-mono font-bold">.env.local</span> and fill in your{' '}
-                  <span className="font-mono">NEXT_PUBLIC_SUPABASE_URL</span> and{' '}
-                  <span className="font-mono">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>.
-                </p>
+      <main className="w-full flex-1 flex flex-col items-center px-4 sm:px-6">
+        {/* Error & Configuration Banners */}
+        {(!isConfigured || error === 'wrong_domain' || error === 'auth_error') && (
+          <div className="w-full max-w-3xl mx-auto mt-10 space-y-4">
+            {!isConfigured && (
+              <div className="w-full p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 backdrop-blur-md text-amber-200 text-left flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h2 className="font-semibold text-sm">Supabase Configuration Required</h2>
+                  <p className="text-xs sm:text-sm mt-0.5 text-amber-200/80">
+                    Please copy <span className="font-mono">.env.example</span> to{' '}
+                    <span className="font-mono font-bold">.env.local</span> and fill in your{' '}
+                    <span className="font-mono">NEXT_PUBLIC_SUPABASE_URL</span> and{' '}
+                    <span className="font-mono">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>.
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Error Message Banners */}
-          {error === 'wrong_domain' && (
-            <div className="w-full mb-8 p-4 rounded-xl bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800/80 text-amber-900 dark:text-amber-200 text-left flex items-start gap-3 shadow-xs">
-              <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
-              <div>
-                <h2 className="font-semibold text-sm">Access Restricted to VVCE Accounts</h2>
-                <p className="text-xs sm:text-sm mt-0.5 text-amber-800 dark:text-amber-300">
-                  Only email addresses ending with{' '}
-                  <span className="font-mono font-bold">@vvce.ac.in</span> can access CalciShare.
-                  Please sign in using your official VVCE college Google account (e.g.{' '}
-                  <span className="font-mono">vvce24cse463@vvce.ac.in</span>).
-                </p>
+            {error === 'wrong_domain' && (
+              <div className="w-full p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 backdrop-blur-md text-amber-200 text-left flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h2 className="font-semibold text-sm">Access Restricted to VVCE Accounts</h2>
+                  <p className="text-xs sm:text-sm mt-0.5 text-amber-200/80">
+                    Only email addresses ending with{' '}
+                    <span className="font-mono font-bold text-white">@vvce.ac.in</span> can access
+                    CalciShare. Please sign in using your official VVCE college Google account (e.g.{' '}
+                    <span className="font-mono">vvce24cse463@vvce.ac.in</span>).
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {error === 'auth_error' && (
-            <div className="w-full mb-8 p-4 rounded-xl bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-800/80 text-red-900 dark:text-red-200 text-left flex items-start gap-3 shadow-xs">
-              <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
-              <div className="w-full">
-                <h2 className="font-semibold text-sm">Authentication Failed</h2>
-                <p className="text-xs sm:text-sm mt-0.5 text-red-800 dark:text-red-300">
-                  We could not complete your sign in. Please try again with your VVCE Google account.
-                </p>
-                {details && (
-                  <div className="mt-2.5 p-2.5 rounded-lg bg-red-100 dark:bg-red-900/50 text-xs font-mono text-red-950 dark:text-red-100 break-all border border-red-200 dark:border-red-800">
-                    <span className="font-bold">Error message:</span> {details}
-                  </div>
-                )}
+            {error === 'auth_error' && (
+              <div className="w-full p-4 rounded-2xl bg-red-500/10 border border-red-400/30 backdrop-blur-md text-red-200 text-left flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                <div className="w-full">
+                  <h2 className="font-semibold text-sm">Authentication Failed</h2>
+                  <p className="text-xs sm:text-sm mt-0.5 text-red-200/80">
+                    We could not complete your sign in. Please try again with your VVCE Google account.
+                  </p>
+                  {details && (
+                    <div className="mt-2.5 p-2.5 rounded-xl bg-red-950/60 text-xs font-mono text-red-100 break-all border border-red-400/20">
+                      <span className="font-bold">Error message:</span> {details}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        )}
 
-          {/* Hero Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100/70 text-blue-800 dark:bg-blue-950 dark:text-blue-300 text-xs font-semibold mb-6">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-            Peer-to-Peer Scientific Calculator Exchange
+        {/* SECTION 2 - HERO */}
+        <section className="w-full max-w-4xl mx-auto pt-14 sm:pt-20 pb-12 sm:pb-16 flex flex-col items-center text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs text-white/80 mb-6">
+            <span className="w-2 h-2 rounded-full bg-brand-green shadow-[0_0_10px_#D6F866]" />
+            <span className="text-brand-green font-medium">VVCE Exclusive</span>
+            <span className="text-white/30">|</span>
+            <span>Campus Calculator Exchange</span>
           </div>
 
-          {/* Hero Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-            Lend or sell scientific calculators between{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
-              VVCE juniors & seniors
-            </span>
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.08] max-w-3xl">
+            Borrow or buy a{' '}
+            <span className="font-serif italic text-brand-green font-normal">calculator</span>{' '}
+            on campus.
           </h1>
 
-          {/* Hero Subtitle */}
-          <p className="mt-4 text-sm sm:text-base md:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
-            Need an fx-991CW or fx-991EX for your semester exams or lab sessions? Finished your
-            engineering math cycles? CalciShare connects Vidyavardhaka College of Engineering
-            (VVCE) students directly to lend or sell calculators quickly and safely on campus.
+          {/* Subtitle */}
+          <p className="mt-5 text-sm sm:text-base text-white/65 max-w-xl leading-relaxed font-light">
+            Need an fx-991CW or fx-991EX for internals or lab sessions, or want a cheap used one
+            from a senior? Connect directly with verified VVCE students—no middleman fees.
           </p>
 
-          {/* CTA Box */}
-          <div className="mt-8 w-full max-w-md p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
-              Sign in with your College ID
+          {/* CTA */}
+          <div id="signin" className="mt-8 flex flex-col items-center gap-3 w-full">
+            {user ? (
+              <>
+                <div className="flex flex-wrap items-center justify-center gap-3 w-full">
+                  <Link
+                    href="/board"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-medium text-sm text-black bg-brand-green shadow-[0_0_20px_rgba(214,248,102,0.2)] hover:shadow-[0_0_32px_rgba(214,248,102,0.4)] hover:brightness-105 transition-all duration-300 group"
+                  >
+                    <span>Open Calculator Board</span>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Link>
+                  <Link
+                    href="/post"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-medium text-sm text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300"
+                  >
+                    <span>Post a Calculator</span>
+                  </Link>
+                </div>
+                <p className="text-xs text-white/45">
+                  Signed in as <span className="font-mono text-white/75">{user.email}</span>
+                </p>
+              </>
+            ) : (
+              <>
+                <GoogleSignInButton />
+                <p className="text-xs text-white/45">
+                  Restricted strictly to{' '}
+                  <span className="font-mono text-white/75">@vvce.ac.in</span> Google accounts.
+                </p>
+              </>
+            )}
+          </div>
+
+          {/* Trust row */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-white/55">
+            <div className="inline-flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-brand-green/70" />
+              <span>@vvce.ac.in verified</span>
+            </div>
+            <div className="inline-flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-brand-green/70" />
+              <span>Zero middleman fees</span>
+            </div>
+            <div className="inline-flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-brand-green/70" />
+              <span>Direct campus handoff</span>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 3 - HOW IT WORKS */}
+        <section id="how-it-works" className="w-full max-w-5xl mx-auto py-10 sm:py-14">
+          <div className="text-center mb-10">
+            <p className="text-xs uppercase tracking-[0.2em] text-brand-green font-medium mb-2">
+              How it works
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-white">
+              Ready in under a minute
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-5">
-              Instant login restricted strictly to <span className="font-medium">@vvce.ac.in</span>{' '}
-              Google accounts.
-            </p>
-            <GoogleSignInButton />
           </div>
 
-          {/* Google Review & Privacy Transparency Card */}
-          <div className="mt-8 w-full max-w-2xl p-4 sm:p-5 rounded-2xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-900/60 text-left text-xs sm:text-sm text-zinc-700 dark:text-zinc-300">
-            <div className="flex items-center gap-2 font-bold text-zinc-900 dark:text-zinc-100 text-xs sm:text-sm mb-2">
-              <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span>How CalciShare Uses Your Data</span>
-            </div>
-            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-xs">
-              When you sign in with your official Google account, CalciShare accesses only your{' '}
-              <strong>@vvce.ac.in email address</strong> to verify that you are a VVCE student and to
-              derive your academic branch and year (e.g. CSE &apos;24). Your email address is{' '}
-              <strong>never shown publicly</strong> to other students. Listing details and contact handles
-              are visible only to logged-in VVCE peers, and you can delete your posts anytime.
-            </p>
-            <div className="mt-3 flex items-center gap-4 text-xs">
-              <Link
-                href="/privacy"
-                className="font-semibold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"
-              >
-                <span>Read our complete Privacy Policy</span>
-                <span>→</span>
-              </Link>
-            </div>
-          </div>
+          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Horizontal connecting gradient line (hidden on mobile) */}
+            <div className="hidden md:block absolute top-7 left-[16%] right-[16%] h-px bg-gradient-to-r from-white/10 via-brand-green/40 to-white/10 pointer-events-none" />
 
-          {/* Features Grid */}
-          <div className="mt-12 w-full grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-            <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3">
-                <ShieldCheck className="w-4 h-4" />
+            {/* Step 1 */}
+            <div className="relative flex flex-col items-center text-center px-4">
+              <div className="w-14 h-14 rounded-2xl bg-[#111612] border border-white/10 flex items-center justify-center text-white/80 mb-4 relative z-10">
+                <Lock className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
-                VVCE Verified Only
-              </h3>
-              <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 leading-normal">
-                Enforced at the database level. Only verified VVCE students can log in, post, or view
-                contact info.
+              <span className="text-[11px] font-mono text-white/40 mb-1">01</span>
+              <h3 className="text-base font-medium text-white mb-1.5">Verify College ID</h3>
+              <p className="text-sm text-white/55 font-light leading-relaxed">
+                Sign in with your <span className="font-mono text-xs">@vvce.ac.in</span> Google
+                account. Only verified VVCE students can see your posts.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
-                <ArrowRightLeft className="w-4 h-4" />
+            {/* Step 2 (Highlighted) */}
+            <div className="relative flex flex-col items-center text-center px-4">
+              <div className="w-14 h-14 rounded-2xl bg-brand-green/10 border border-brand-green/40 flex items-center justify-center text-brand-green mb-4 relative z-10 shadow-[0_0_25px_rgba(214,248,102,0.15)]">
+                <ArrowRightLeft className="w-5 h-5" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-brand-green shadow-[0_0_10px_#D6F866]" />
               </div>
-              <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
-                Lend or Sell
-              </h3>
-              <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 leading-normal">
-                Choose to lend for free or sell at student-friendly prices. No hidden fees or middleman cuts.
+              <span className="text-[11px] font-mono text-brand-green mb-1">02</span>
+              <h3 className="text-base font-medium text-white mb-1.5">Browse or Post</h3>
+              <p className="text-sm text-white/55 font-light leading-relaxed">
+                Filter live listings by model (fx-991CW, fx-991EX) or post your spare calculator in
+                30 seconds.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-              <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-violet-400 flex items-center justify-center mb-3">
-                <MessageCircle className="w-4 h-4" />
+            {/* Step 3 */}
+            <div className="relative flex flex-col items-center text-center px-4">
+              <div className="w-14 h-14 rounded-2xl bg-[#111612] border border-white/10 flex items-center justify-center text-white/80 mb-4 relative z-10">
+                <MessageCircle className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
-                Direct Contact
-              </h3>
-              <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 leading-normal">
-                Connect via Instagram or Discord to coordinate handoffs right outside the library or canteen.
+              <span className="text-[11px] font-mono text-white/40 mb-1">03</span>
+              <h3 className="text-base font-medium text-white mb-1.5">Meet &amp; Handoff</h3>
+              <p className="text-sm text-white/55 font-light leading-relaxed">
+                Message your batchmate directly and exchange near the library, canteen, or block.
               </p>
             </div>
           </div>
-        </div>
+
+          <div className="mt-10 flex justify-center">
+            <Link
+              href="/privacy"
+              className="inline-flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors duration-300 underline underline-offset-4 decoration-white/20"
+            >
+              <Shield className="w-3.5 h-3.5 text-brand-green" />
+              <span>Read how CalciShare protects your data</span>
+            </Link>
+          </div>
+        </section>
       </main>
 
       <Footer />

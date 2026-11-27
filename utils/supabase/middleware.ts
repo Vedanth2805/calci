@@ -2,8 +2,14 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.delete('x-user-id')
+  requestHeaders.delete('x-user-email')
+
   let supabaseResponse = NextResponse.next({
-    request,
+    request: {
+      headers: requestHeaders,
+    },
   })
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -23,7 +29,9 @@ export async function updateSession(request: NextRequest) {
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
         supabaseResponse = NextResponse.next({
-          request,
+          request: {
+            headers: requestHeaders,
+          },
         })
         cookiesToSet.forEach(({ name, value, options }) =>
           supabaseResponse.cookies.set(name, value, options)
@@ -38,6 +46,22 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  if (user) {
+    requestHeaders.set('x-user-id', user.id)
+    if (user.email) {
+      requestHeaders.set('x-user-email', user.email)
+    }
+    const existingCookies = supabaseResponse.cookies.getAll()
+    supabaseResponse = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
+    existingCookies.forEach((cookie) => {
+      supabaseResponse.cookies.set(cookie)
+    })
+  }
+
   const { pathname } = request.nextUrl
 
   // Protected routes: redirect unauthenticated users away from /board, /post, /my-listings to "/"
@@ -49,13 +73,6 @@ export async function updateSession(request: NextRequest) {
   if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
-    return NextResponse.redirect(url)
-  }
-
-  // Logged-in users visiting "/" are redirected to /board
-  if (pathname === '/' && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/board'
     return NextResponse.redirect(url)
   }
 

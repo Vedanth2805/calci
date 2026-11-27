@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Calculator, ArrowLeft, Shield, Clock, Eye, Trash2, Mail, Lock } from 'lucide-react'
+import { Calculator, ArrowLeft, Shield, Clock, Eye, Trash2, Lock } from 'lucide-react'
 import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
@@ -11,17 +11,19 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+    <div className="min-h-screen flex flex-col">
       {/* Top Header */}
-      <header className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+      <header className="sticky top-6 z-20 w-full max-w-4xl mx-auto px-4">
+        <div className="rounded-full backdrop-blur-md bg-white/5 border border-white/10 px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-full bg-brand-green/15 border border-brand-green/30 flex items-center justify-center text-brand-green group-hover:scale-105 transition-transform duration-300">
               <Calculator className="w-4 h-4" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-base leading-tight">CalciShare</span>
-              <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+              <span className="font-medium text-sm sm:text-base leading-tight text-white">
+                CalciShare
+              </span>
+              <span className="text-[10px] font-medium text-brand-green/80 uppercase tracking-wider">
                 VVCE Student Network
               </span>
             </div>
@@ -29,7 +31,7 @@ export default function PrivacyPage() {
 
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white/80 hover:text-white transition-all duration-300"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Home</span>
@@ -38,39 +40,39 @@ export default function PrivacyPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-16 sm:py-20">
         {/* Title Badge */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 text-xs font-semibold mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-brand-green text-xs font-medium mb-4">
           <Shield className="w-3.5 h-3.5" />
           <span>CalciShare Student Privacy</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-          Privacy Policy
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-[1.05]">
+          Privacy <span className="font-serif italic text-brand-green font-normal">Policy</span>
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-3 text-xs sm:text-sm text-white/50">
           Last updated: November 2026 • Plain language policy for Vidyavardhaka College of Engineering (VVCE) students
         </p>
 
-        <div className="mt-8 space-y-8 text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
+        <div className="mt-10 space-y-6 text-xs sm:text-sm text-white/70 leading-relaxed font-light">
           {/* Section 1 */}
-          <section className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-            <div className="flex items-center gap-2.5 mb-2.5 text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base">
-              <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+          <section className="p-6 rounded-3xl bg-[#111612]/60 backdrop-blur-xl border border-white/10">
+            <div className="flex items-center gap-3 mb-3 text-white font-medium text-sm sm:text-base">
+              <div className="p-2 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green">
                 <Calculator className="w-4 h-4" />
               </div>
               <h2>About CalciShare</h2>
             </div>
             <p>
               CalciShare is an independent peer-to-peer web platform created exclusively for students of{' '}
-              <strong>Vidyavardhaka College of Engineering (VVCE), Mysuru</strong>. The platform allows juniors and seniors to lend or sell unused scientific calculators (such as Casio fx-991CW, fx-991EX, fx-82MS) directly to batchmates on campus.
+              <strong className="text-white font-medium">Vidyavardhaka College of Engineering (VVCE), Mysuru</strong>. The platform allows juniors and seniors to lend or sell unused scientific calculators (such as Casio fx-991CW, fx-991EX, fx-82MS) directly to batchmates on campus.
             </p>
           </section>
 
           {/* Section 2 */}
-          <section className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-            <div className="flex items-center gap-2.5 mb-2.5 text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base">
-              <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+          <section className="p-6 rounded-3xl bg-[#111612]/60 backdrop-blur-xl border border-white/10">
+            <div className="flex items-center gap-3 mb-3 text-white font-medium text-sm sm:text-base">
+              <div className="p-2 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green">
                 <Lock className="w-4 h-4" />
               </div>
               <h2>Information We Collect</h2>
@@ -78,82 +80,93 @@ export default function PrivacyPage() {
             <p className="mb-3">
               We practice data minimization and collect only the essential details required to operate a verified student exchange:
             </p>
-            <ul className="list-disc list-inside space-y-2 text-zinc-600 dark:text-zinc-400 pl-1">
+            <ul className="list-disc list-inside space-y-2 text-white/60 pl-1">
               <li>
-                <strong>Official College Email:</strong> When you sign in via Google OAuth, we receive your <code className="font-mono bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-zinc-800 dark:text-zinc-200">@vvce.ac.in</code> email address. This is used strictly to verify that you are a student and to automatically derive your admission year and academic branch (e.g. CSE &apos;24). <em>Your email address is NEVER shown publicly to other students.</em>
+                <strong className="text-white font-medium">Official College Email:</strong> When you sign in via Google OAuth, we receive your <code className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-brand-green">@vvce.ac.in</code> email address to verify student status, derive your branch/year, and attach it automatically to listings you post to prevent fake posts. <em className="text-white/80">Your email is NEVER shown to the public or logged-out visitors—only logged-in VVCE students can see it on your listings.</em>
               </li>
               <li>
-                <strong>Listing Information:</strong> When you post a calculator, we store the calculator model, whether you wish to lend or sell, the price (for sales only), and any optional note you include.
+                <strong className="text-white font-medium">Listing Information:</strong> When you post a calculator, we store the calculator model, whether you wish to lend or sell, the price (for sales only), and any optional note you include.
               </li>
               <li>
-                <strong>Contact Handle:</strong> You provide an Instagram username or Discord handle so interested peers can reach out directly.
+                <strong className="text-white font-medium">Contact Handle:</strong> You provide an Instagram username or Discord handle so interested peers can reach out directly.
               </li>
             </ul>
           </section>
 
           {/* Section 3 */}
-          <section className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-            <div className="flex items-center gap-2.5 mb-2.5 text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base">
-              <div className="p-1.5 rounded-lg bg-violet-50 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400">
+          <section className="p-6 rounded-3xl bg-[#111612]/60 backdrop-blur-xl border border-white/10">
+            <div className="flex items-center gap-3 mb-3 text-white font-medium text-sm sm:text-base">
+              <div className="p-2 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green">
                 <Eye className="w-4 h-4" />
               </div>
               <h2>Who Can See Your Information</h2>
             </div>
             <p>
-              Access to listings and contact handles is strictly restricted. Only logged-in students with a verified <code className="font-mono bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-zinc-800 dark:text-zinc-200">@vvce.ac.in</code> account can view active listings and contact handles. Anonymous or logged-out visitors cannot view listings, student handles, or any contact details.
+              Access to listings and contact handles is strictly restricted. Only logged-in students with a verified <code className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-brand-green">@vvce.ac.in</code> account can view active listings and contact handles. Anonymous or logged-out visitors cannot view listings, student handles, or any contact details.
             </p>
           </section>
 
           {/* Section 4 */}
-          <section className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-            <div className="flex items-center gap-2.5 mb-2.5 text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base">
-              <div className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
+          <section className="p-6 rounded-3xl bg-[#111612]/60 backdrop-blur-xl border border-white/10">
+            <div className="flex items-center gap-3 mb-3 text-white font-medium text-sm sm:text-base">
+              <div className="p-2 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green">
                 <Clock className="w-4 h-4" />
               </div>
-              <h2>Listing Expiration & User Control</h2>
+              <h2>Listing Expiration &amp; User Control</h2>
             </div>
             <p className="mb-2">
               You retain total control over the listings you publish:
             </p>
-            <ul className="list-disc list-inside space-y-1.5 text-zinc-600 dark:text-zinc-400 pl-1">
-              <li>Listings automatically expire after <strong>30 days</strong> to prevent stale posts.</li>
+            <ul className="list-disc list-inside space-y-1.5 text-white/60 pl-1">
+              <li>Listings automatically expire after <strong className="text-white font-medium">30 days</strong> to prevent stale posts.</li>
               <li>You can mark a listing as completed (&quot;Done&quot;) at any time once handed over.</li>
-              <li>You can permanently delete any of your listings instantly from the <strong>My listings</strong> page.</li>
+              <li>You can permanently delete any of your listings instantly from the <strong className="text-white font-medium">My listings</strong> page.</li>
             </ul>
           </section>
 
           {/* Section 5 */}
-          <section className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-            <div className="flex items-center gap-2.5 mb-2.5 text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base">
-              <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+          <section className="p-6 rounded-3xl bg-[#111612]/60 backdrop-blur-xl border border-white/10">
+            <div className="flex items-center gap-3 mb-3 text-white font-medium text-sm sm:text-base">
+              <div className="p-2 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green">
                 <Shield className="w-4 h-4" />
               </div>
-              <h2>Data Storage & No Third-Party Selling</h2>
+              <h2>Data Storage &amp; No Third-Party Selling</h2>
             </div>
             <p>
-              We do <strong>NOT</strong> sell, rent, monetize, or disclose your personal data to advertisers or third-party marketers. Your data is stored securely in <strong>Supabase</strong> (PostgreSQL) hosted in secure cloud infrastructure with database-level Row Level Security (RLS) enforcement.
+              We do <strong className="text-white font-medium">NOT</strong> sell, rent, monetize, or disclose your personal data to advertisers or third-party marketers. Your data is stored securely in <strong className="text-white font-medium">Supabase</strong> (PostgreSQL) hosted in secure cloud infrastructure with database-level Row Level Security (RLS) enforcement.
+            </p>
+          </section>
+
+          {/* Section 5 */}
+          <section className="p-6 rounded-3xl bg-[#111612]/60 backdrop-blur-xl border border-white/10">
+            <div className="flex items-center gap-3 mb-3 text-white font-medium text-sm sm:text-base">
+              <div className="p-2 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green">
+                <Shield className="w-4 h-4" />
+              </div>
+              <h2>Peer-to-Peer Terms &amp; No Liability</h2>
+            </div>
+            <p>
+              CalciShare is strictly a campus directory that connects verified VVCE students who want to lend, sell, or request calculators. We do <strong className="text-white font-medium">not</strong> inspect calculators, verify working condition, handle payments or deposits, or mediate disputes.
+            </p>
+            <p className="mt-2.5 text-white/60">
+              All handoffs, payments, ID checks, and calculator returns happen solely between the two students. Buyers should always test all buttons, the LCD display, and the solar panel in person before paying, and lenders are encouraged to take a photo of the borrower&apos;s college ID card and note their phone number. The CalciShare developers assume no responsibility for lost, damaged, or defective items.
             </p>
           </section>
 
           {/* Section 6 */}
-          <section className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
-            <div className="flex items-center gap-2.5 mb-2.5 text-zinc-900 dark:text-zinc-100 font-bold text-sm sm:text-base">
-              <div className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400">
+          <section className="p-6 rounded-3xl bg-[#111612]/60 backdrop-blur-xl border border-white/10">
+            <div className="flex items-center gap-3 mb-3 text-white font-medium text-sm sm:text-base">
+              <div className="p-2 rounded-xl bg-red-500/10 border border-red-400/20 text-red-400">
                 <Trash2 className="w-4 h-4" />
               </div>
-              <h2>Account Deletion & Data Inquiries</h2>
+              <h2>Account Deletion &amp; Data Control</h2>
             </div>
             <p>
-              If you wish to have your profile and all associated listings permanently deleted from our database, or have any questions about this Privacy Policy, please send an email to:
+              You can permanently delete any of your active or past calculator listings at any time from the{' '}
+              <strong className="text-white font-medium">My listings</strong> page—deleted listings are removed immediately from the database.
             </p>
-            <div className="mt-3 p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 font-mono text-xs text-blue-600 dark:text-blue-400 flex items-center gap-2">
-              <Mail className="w-4 h-4 text-zinc-500" />
-              <a href="mailto:privacy@YOUR_DOMAIN" className="hover:underline">
-                privacy@YOUR_DOMAIN
-              </a>
-            </div>
-            <p className="mt-2 text-[11px] text-zinc-500">
-              Please send the request from your official VVCE email address so we can confirm ownership and process your deletion within 48 hours.
+            <p className="mt-2.5 text-white/60">
+              If you want your entire profile record removed as well, please sign out and stop using the service, or contact the VVCE student maintainer directly on campus.
             </p>
           </section>
         </div>

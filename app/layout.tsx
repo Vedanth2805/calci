@@ -1,15 +1,20 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, PT_Serif } from 'next/font/google'
 import './globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  display: 'swap',
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const ptSerif = PT_Serif({
+  variable: '--font-pt-serif',
   subsets: ['latin'],
+  weight: '400',
+  style: ['italic'],
+  display: 'swap',
 })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
@@ -66,10 +71,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${ptSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
-        {children}
+      <body className="min-h-full bg-[#050806] text-white font-sans antialiased selection:bg-[#D6F866] selection:text-black">
+        {/* Fixed Minimal Background Layer */}
+        <div className="fixed inset-0 z-0 pointer-events-none bg-[#050806]">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(214,248,102,0.06),transparent_60%)]" />
+        </div>
+
+        {/* Main Content Wrapper */}
+        <div className="relative z-10 flex flex-col min-h-screen">
+          {children}
+        </div>
       </body>
     </html>
   )
